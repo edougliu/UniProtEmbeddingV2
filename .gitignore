@@ -1,0 +1,6 @@
+**.h5
+**.tsv
+data/**.h5
+data/**.tsv
+data/**.xlsx
+.idea
