@@ -1,13 +1,23 @@
 import os
 import h5py
+import numpy as np
+
 from uniprotein import UniProtein
 
 
 class Parser:
     def __init__(self):
-        self.proteins_file_name = "data/uniprotkb_AND_reviewed_true_2023_08_22.tsv"
-        self.embeddings_file_name = "data/per-protein.h5"
+        print("Parser current working directory:", os.getcwd())
+        self.proteins_file_name = os.path.join('data', 'uniprotkb_AND_reviewed_true_2023_08_22.tsv')
+        # self.proteins_file_name = "data/uniprotkb_AND_reviewed_true_2023_08_22.tsv"
+        # self.embeddings_file_name = "data/per-protein.h5"
+        self.embeddings_file_name = os.path.join('data', 'per-protein.h5')
         self.uni_proteins = {}
+
+    def parse(self):
+        if self.uni_proteins is None or len(self.uni_proteins) == 0:
+            self.read_ecs()
+            self.read_embeddings()
 
     # loads up the embedding from the h5 file for the given uniprotein entry
     # dependency on read_ecs to have been run first
@@ -21,7 +31,7 @@ class Parser:
             for entry, embedding in file.items():
                 try:
                     protein = self.find_by_entry(entry)
-                    protein.set_embedding(embedding)
+                    protein.set_embedding(np.array(embedding))
                     self.uni_proteins[entry] = protein
                 except KeyError:
                     print("no Uniprot for: " + entry)
